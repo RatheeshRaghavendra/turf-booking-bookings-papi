@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.turf_booking.bookings_papi.feign.BookingInterface;
 import com.turf_booking.bookings_papi.feign.TurfInterface;
+import com.turf_booking.bookings_papi.feign.UserInterface;
 
 @RestController
 @RequestMapping("api/turf-booking")
@@ -21,6 +22,8 @@ public class TurfBookingsController {
 	@Autowired
 	BookingInterface bookingInterface;
 	
+	@Autowired
+	UserInterface userInterface;
 	
 	@GetMapping("live")
 	public ResponseEntity<String> getHealth() {
@@ -31,8 +34,9 @@ public class TurfBookingsController {
 	public ResponseEntity<String> getReady() {
 		
 		try {
-		String turfReady = turfInterface.getHealth();
-		String bookingReady = bookingInterface.getHealth();
+		turfInterface.getHealth();
+		bookingInterface.getHealth();
+		userInterface.getHealth();
 		
 		return new ResponseEntity<>("Ready",HttpStatus.OK);
 		} catch (Exception e) {
