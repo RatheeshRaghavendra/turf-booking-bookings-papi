@@ -3,10 +3,12 @@ package com.turf_booking.bookings_papi.controller;
 
 import java.util.List;
 
+import com.turf_booking.bookings_papi.model.BookingDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -58,6 +60,12 @@ public class TurfBookingsController {
 	public ResponseEntity<ApiResponse<List<TurfWrapper>>> getAllTurfs (){
 		
 		return turfBookingService.getAllTurfs();
+	}
+
+	@PostMapping("booking")
+	public ResponseEntity<ApiResponse<String>> createBooking (BookingDto bookingDto){
+
+		return turfBookingService.addBooking(bookingDto);
 	}
 
 }

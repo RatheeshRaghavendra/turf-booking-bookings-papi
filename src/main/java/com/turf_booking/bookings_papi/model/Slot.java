@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Slot {
 	
-	Integer slotId;
+	String slotId;
 	String day;
 	String month;
 	String year;
@@ -24,8 +24,11 @@ public class Slot {
 		super();
 		
 	}
-	
-	
-	
+
+	public void setSlotId (){
+
+		this.slotId = this.day + "-" + this.month + "-" + this.year + "$" + this.slotTime;
+//		return this;
+	}
 	
 }

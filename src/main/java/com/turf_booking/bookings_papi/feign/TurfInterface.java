@@ -37,10 +37,10 @@ public interface TurfInterface {
 	public ResponseEntity<ApiResponse<String>> addTurf (@RequestBody Turf turf);
 	
 	@PatchMapping("api/turf-sapi/turf/book/{turfId}")
-	public ResponseEntity<ApiResponse<String>> bookTurf (@PathVariable Integer turfId,@RequestParam List<Integer> slotIds);
+	public ResponseEntity<ApiResponse<String>> bookTurf (@PathVariable Integer turfId,@RequestParam List<String> slotIds);
 	
 	@DeleteMapping("api/turf-sapi/turf/cancel/{turfId}")
-	public ResponseEntity<ApiResponse<String>> cancelTurf (@PathVariable Integer turfId,@RequestParam List<Integer> slotIds);
+	public ResponseEntity<ApiResponse<String>> cancelTurf (@PathVariable Integer turfId,@RequestParam List<String> slotIds);
 	
 	@GetMapping("api/turf-sapi/slots")
 	public ResponseEntity<ApiResponse<List<Slot>>> getSlots (@RequestParam List<Integer> slots);
