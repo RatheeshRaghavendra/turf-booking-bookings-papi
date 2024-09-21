@@ -14,6 +14,7 @@ public class Slot {
 	public Slot(String day, String month, String year, String slotTime) {
 		super();
 		
+		this.slotId = day + "-" + month + "-" + year + "$" + slotTime;
 		this.day = day;
 		this.month = month;
 		this.year = year;

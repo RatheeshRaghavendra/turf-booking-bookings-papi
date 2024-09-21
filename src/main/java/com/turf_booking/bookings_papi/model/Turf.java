@@ -13,11 +13,11 @@ public class Turf {
 	String area;
 	String address;
 	String sports;
-	List<Integer> bookedSlotIds;
+	List<String> bookedSlotIds;
 	Integer pricePerHour;
 	
 	public Turf(Integer turfId, String name, String city, String area, String address, String sports,
-			List<Integer> bookedSlotIds, Integer pricePerHour) {
+			List<String> bookedSlotIds, Integer pricePerHour) {
 		super();
 		this.turfId = turfId;
 		this.name = name;
