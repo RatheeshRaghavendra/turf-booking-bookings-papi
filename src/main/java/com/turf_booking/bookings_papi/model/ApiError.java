@@ -28,7 +28,4 @@ public class ApiError {
 		this.errorDescription = e.toString();
 		this.customError = customError;
 	}
-	
-	
-
 }
