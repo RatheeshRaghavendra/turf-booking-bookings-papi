@@ -63,6 +63,10 @@ public class TurfBookingService {
 			}
 			apiResponse.setPayload(turfResponse);
 		} catch (FeignException e) {
+			if (e.getClass().getSimpleName().contentEquals("ServiceUnavailable")) {
+				log.error(prefix + "CAUSE::" + e.getClass().getSimpleName() + "::DESCRIPTION::" + e.getMessage());
+				throw new UnexpectedTurfBookingException(e, e.getMessage());
+			}
 			log.debug(prefix + "EXCEPTION::" + e);
 			apiResponse = auxillaryFunctions.extractErrorResponse(e);
 			log.error(prefix + "CAUSE::" + apiResponse.getApiError().getErrorMessage() + "::DESCRIPTION::" + apiResponse.getApiError().getCustomError());
@@ -88,6 +92,10 @@ public class TurfBookingService {
 					.toList();
 			apiResponse.setPayload(bookedSlots);
 		} catch (FeignException e) {
+			if (e.getClass().getSimpleName().contentEquals("ServiceUnavailable")) {
+				log.error(prefix + "CAUSE::" + e.getClass().getSimpleName() + "::DESCRIPTION::" + e.getMessage());
+				throw new UnexpectedTurfBookingException(e, e.getMessage());
+			}
 			log.debug(prefix + "EXCEPTION::" + e);
 			apiResponse = auxillaryFunctions.extractErrorResponse(e);
 			log.error(prefix + "CAUSE::" + apiResponse.getApiError().getErrorMessage() + "::DESCRIPTION::" + apiResponse.getApiError().getCustomError());
@@ -122,14 +130,13 @@ public class TurfBookingService {
 				log.info(prefix + "Updated Book");
 			} catch (FeignException e) {
 				log.info(prefix + "Inside Feign Exception::" + e.getClass().getSimpleName());
-				if(e.getClass().getSimpleName().contentEquals("ServiceUnavailable")) {
+				if (e.getClass().getSimpleName().contentEquals("ServiceUnavailable")) {
 					log.error(prefix + "CAUSE::" + e.getClass().getSimpleName() + "::DESCRIPTION::" + e.getMessage());
 					log.info(prefix + "Rolling back the Booking");
 					turfInterface.cancelTurf(bookingDto.getTurfId(), slotIdList);
 					log.info(prefix + "Rollback successful");
-					throw new UnexpectedTurfBookingException(e,e.getMessage());
-				}
-				else {
+					throw new UnexpectedTurfBookingException(e, e.getMessage());
+				} else {
 					apiResponse = auxillaryFunctions.extractErrorResponse(e);
 					log.error(prefix + "CAUSE::" + apiResponse.getApiError().getErrorMessage() + "::DESCRIPTION::" + apiResponse.getApiError().getCustomError());
 					log.info(prefix + "Rolling back the Booking");
@@ -137,13 +144,8 @@ public class TurfBookingService {
 					log.info(prefix + "Rollback successful");
 					throw new ApiResponseException(apiResponse);
 				}
-			} catch (Exception e) {
-				log.error(prefix + "CAUSE::" + e.getClass().getSimpleName() + "::DESCRIPTION::" + e.getMessage());
-				log.info(prefix + "Rolling back the Booking");
-				turfInterface.cancelTurf(bookingDto.getTurfId(), slotIdList);
-				log.info(prefix + "Rollback successful");
-				throw e;
 			}
+
 			apiResponse.setPayload(bookingResponse);
 
 		} catch (ApiResponseException apiResponseException) {
@@ -151,6 +153,10 @@ public class TurfBookingService {
 			log.error(prefix + "CAUSE::" + apiResponse.getApiError().getErrorMessage() + "::DESCRIPTION::" + apiResponse.getApiError().getCustomError());
 			throw apiResponseException;
 		}catch (FeignException e) {
+			if (e.getClass().getSimpleName().contentEquals("ServiceUnavailable")) {
+				log.error(prefix + "CAUSE::" + e.getClass().getSimpleName() + "::DESCRIPTION::" + e.getMessage());
+				throw new UnexpectedTurfBookingException(e, e.getMessage());
+			}
 			log.debug(prefix + "EXCEPTION::" + e);
 			apiResponse = auxillaryFunctions.extractErrorResponse(e);
 			log.error(prefix + "CAUSE::" + apiResponse.getApiError().getErrorMessage() + "::DESCRIPTION::" + apiResponse.getApiError().getCustomError());
@@ -184,6 +190,10 @@ public class TurfBookingService {
 					user.getUsername());
 			apiResponse.setPayload(bookingResponse);
 		} catch (FeignException e) {
+			if (e.getClass().getSimpleName().contentEquals("ServiceUnavailable")) {
+				log.error(prefix + "CAUSE::" + e.getClass().getSimpleName() + "::DESCRIPTION::" + e.getMessage());
+				throw new UnexpectedTurfBookingException(e, e.getMessage());
+			}
 			log.info(prefix + "EXCEPTION::" + e.getMessage().contains("BookingInterface"));
 			apiResponse = auxillaryFunctions.extractErrorResponse(e);
 			log.error(prefix + "CAUSE::" + apiResponse.getApiError().getErrorMessage() + "::DESCRIPTION::" + apiResponse.getApiError().getCustomError());
@@ -203,9 +213,32 @@ public class TurfBookingService {
 		try {
 			Booking booking = bookingInterface.getBooking(bookingId).getBody().getPayload();
 			turfInterface.cancelTurf(booking.getTurfId(), booking.getSlotIds());
-			String bookingResponse = bookingInterface.cancelBooking(bookingId).getBody().getPayload();
+			String bookingResponse;
+			try {
+				bookingResponse = bookingInterface.cancelBooking(bookingId).getBody().getPayload();
+			} catch (FeignException e) {
+				log.info(prefix + "Inside Feign Exception::" + e.getClass().getSimpleName());
+				if (e.getClass().getSimpleName().contentEquals("ServiceUnavailable")) {
+					log.error(prefix + "CAUSE::" + e.getClass().getSimpleName() + "::DESCRIPTION::" + e.getMessage());
+					log.info(prefix + "Rolling back the Booking");
+					turfInterface.bookTurf(booking.getTurfId(), booking.getSlotIds());
+					log.info(prefix + "Rollback successful");
+					throw new UnexpectedTurfBookingException(e, e.getMessage());
+				} else {
+					apiResponse = auxillaryFunctions.extractErrorResponse(e);
+					log.error(prefix + "CAUSE::" + apiResponse.getApiError().getErrorMessage() + "::DESCRIPTION::" + apiResponse.getApiError().getCustomError());
+					log.info(prefix + "Rolling back the Booking");
+					turfInterface.bookTurf(booking.getTurfId(), booking.getSlotIds());
+					log.info(prefix + "Rollback successful");
+					throw new ApiResponseException(apiResponse);
+				}
+			}
 			apiResponse.setPayload(bookingResponse);
 		} catch (FeignException e) {
+			if (e.getClass().getSimpleName().contentEquals("ServiceUnavailable")) {
+				log.error(prefix + "CAUSE::" + e.getClass().getSimpleName() + "::DESCRIPTION::" + e.getMessage());
+				throw new UnexpectedTurfBookingException(e, e.getMessage());
+			}
 			log.debug(prefix + "EXCEPTION::" + e);
 			apiResponse = auxillaryFunctions.extractErrorResponse(e);
 			log.error(prefix + "CAUSE::" + apiResponse.getApiError().getErrorMessage() + "::DESCRIPTION::" + apiResponse.getApiError().getCustomError());
