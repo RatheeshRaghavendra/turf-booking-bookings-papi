@@ -10,4 +10,5 @@ public class BookingDto {
     Integer turfId;
     List<Slot> slotList;
     Integer userId;
+    Integer price = 0;
 }

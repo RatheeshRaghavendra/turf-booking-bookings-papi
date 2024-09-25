@@ -2,6 +2,7 @@ package com.turf_booking.bookings_papi.model;
 
 import java.util.List;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
@@ -13,9 +14,10 @@ public class BookingWrapper {
 	List<Slot> bookedSlots;
 	String userName;
 	String userUserName;
+	Integer price;
 	
 	public BookingWrapper(Integer bookingId, String turfName, String turfAddress, List<Slot> bookedSlots,
-			String userName, String userUserName) {
+			String userName, String userUserName, Integer price) {
 		super();
 		this.bookingId = bookingId;
 		this.turfName = turfName;
@@ -23,6 +25,7 @@ public class BookingWrapper {
 		this.bookedSlots = bookedSlots;
 		this.userName = userName;
 		this.userUserName = userUserName;
+		this.price = price;
 	}
 
 	public BookingWrapper() {

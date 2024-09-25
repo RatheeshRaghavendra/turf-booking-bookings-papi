@@ -54,6 +54,11 @@ public class GlobalAspectLogger {
     }
 
     @AfterReturning(value = "execution(* com.turf_booking.bookings_papi.controller.*.*(..))",returning = "apiResponse")
+    public void afterListBookingWrapper(JoinPoint joinPoint, ResponseEntity<ApiResponse<List<BookingWrapper>>> apiResponse){
+        log.info(prefix + joinPoint.getSignature().getDeclaringType().getSimpleName() + "::" + joinPoint.getSignature().getName() + "::Response Payload: " + apiResponse.getBody().getPayload().toString());
+    }
+
+    @AfterReturning(value = "execution(* com.turf_booking.bookings_papi.controller.*.*(..))",returning = "apiResponse")
     public void afterString(JoinPoint joinPoint, ResponseEntity<ApiResponse<String>> apiResponse){
         log.info(prefix + joinPoint.getSignature().getDeclaringType().getSimpleName() + "::" + joinPoint.getSignature().getName() + "::Response Payload: " + apiResponse.getBody().getPayload().toString());
     }

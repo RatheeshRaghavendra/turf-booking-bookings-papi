@@ -91,7 +91,34 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({ApiResponseException.class})
     public ResponseEntity<ApiResponse<String>> handleException(ApiResponseException apiResponseException){
+
         ApiResponse<String> apiResponse = apiResponseException.getApiResponse();
+
+        return new ResponseEntity<>(apiResponse,apiResponse.getStatusMessage());
+    }
+
+    @ExceptionHandler({SlotAlreadyBooked.class})
+    public ResponseEntity<ApiResponse<String>> handleAlreadyExistsException(CustomTurfBookingException e){
+
+        ApiResponse apiResponse = new ApiResponse<>();
+        ApiError apiError = new ApiError();
+        String customError = e.getMessage();
+        apiError.setApiErrorDetails(e, customError);
+        apiResponse.setStatusCode(500);
+        apiResponse.setApiError(apiError);
+
+        return new ResponseEntity<>(apiResponse,apiResponse.getStatusMessage());
+    }
+
+    @ExceptionHandler({ApiUnavailable.class})
+    public ResponseEntity<ApiResponse<String>> handleApiUnavailableException(CustomTurfBookingException e){
+
+        ApiResponse apiResponse = new ApiResponse<>();
+        ApiError apiError = new ApiError();
+        String customError = e.getMessage();
+        apiError.setApiErrorDetails(e.getException(), customError);
+        apiResponse.setStatusCode(503);
+        apiResponse.setApiError(apiError);
 
         return new ResponseEntity<>(apiResponse,apiResponse.getStatusMessage());
     }

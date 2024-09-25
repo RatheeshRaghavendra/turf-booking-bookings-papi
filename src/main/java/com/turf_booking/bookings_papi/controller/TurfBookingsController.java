@@ -3,9 +3,7 @@ package com.turf_booking.bookings_papi.controller;
 
 import java.util.List;
 
-import com.turf_booking.bookings_papi.model.BookingDto;
-import com.turf_booking.bookings_papi.model.BookingWrapper;
-import com.turf_booking.bookings_papi.model.Slot;
+import com.turf_booking.bookings_papi.model.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.turf_booking.bookings_papi.feign.BookingInterface;
 import com.turf_booking.bookings_papi.feign.TurfInterface;
 import com.turf_booking.bookings_papi.feign.UserInterface;
-import com.turf_booking.bookings_papi.model.ApiResponse;
-import com.turf_booking.bookings_papi.model.TurfWrapper;
 import com.turf_booking.bookings_papi.service.TurfBookingService;
 
 @RestController
@@ -75,6 +71,12 @@ public class TurfBookingsController {
 		return turfBookingService.getBookedTurfSlots(turfId);
 	}
 
+	@GetMapping("turf")
+	public ResponseEntity<ApiResponse<List<Turf>>> searchTurfsBy (@RequestParam String parameter, @RequestParam String value){
+
+		return turfBookingService.searchTurfBy(parameter,value);
+	}
+
 	@PostMapping("booking")
 	public ResponseEntity<ApiResponse<String>> createBooking (@RequestBody BookingDto bookingDto){
 
@@ -86,11 +88,28 @@ public class TurfBookingsController {
 		
 		return turfBookingService.getBooking(bookingId);
 	}
-	
+
+	@GetMapping("booking")
+	public ResponseEntity<ApiResponse<List<BookingWrapper>>> searchBookingsBy (@RequestParam String parameter, @RequestParam Integer value){
+
+		return turfBookingService.searchBookingsBy(parameter,value);
+	}
+
 	@DeleteMapping("booking/{bookingId}")
 	public ResponseEntity<ApiResponse<String>> cancelBooking (@PathVariable Integer bookingId){
 		
 		return turfBookingService.cancelBooking(bookingId);
+	}
+
+	@GetMapping("checkout")
+	public ResponseEntity<ApiResponse<Checkout>> getCheckout (@RequestParam String username, @RequestParam Integer turfId, @RequestParam List<String> slotIds){
+		return turfBookingService.getCheckout(turfId,slotIds,username);
+	}
+
+	@PostMapping("user")
+	public ResponseEntity<ApiResponse<String>> addUser (@RequestBody UserDetails userDetails){
+
+		return turfBookingService.addUser(userDetails);
 	}
 
 }
