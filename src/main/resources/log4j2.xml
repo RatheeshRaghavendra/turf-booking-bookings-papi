@@ -3,7 +3,7 @@
     <Properties>
         <Property name="BASE_PATH">${bundle:application:logging.basePath}</Property>
         <Property name="LOG_FILE_NAME">${bundle:application:spring.application.name}</Property>
-        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n</Property>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5level [%X{traceId}-%X{spanId}] - %msg%n</Property>
     </Properties>
     <Appenders>
         <Console name="ConsoleAppender" target="SYSTEM_OUT">
