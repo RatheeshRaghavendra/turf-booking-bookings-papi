@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Properties>
-        <Property name="BASE_PATH">${bundle:application:logging.basePath}</Property>
+        <Property name="BASE_PATH">${sys:logging.basePath}</Property>
         <Property name="LOG_FILE_NAME">${bundle:application:spring.application.name}</Property>
         <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5level [%X{traceId}-%X{spanId}] - %msg%n</Property>
     </Properties>
