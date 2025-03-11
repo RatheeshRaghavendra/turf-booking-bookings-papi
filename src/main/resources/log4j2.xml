@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="BASE_PATH">${sys:logging.basePath}</Property>
+        <Property name="LOG_FILE_NAME">${bundle:application:spring.application.name}</Property>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5level [%X{traceId}-%X{spanId}] - %msg%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+        <RollingFile name="ErrorFileAppender" fileName="${BASE_PATH}/logs/error-${LOG_FILE_NAME}.log"
+                     filePattern="${BASE_PATH}/logs/errors/${LOG_FILE_NAME}/error-${LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="FATAL" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+        </RollingFile>
+        <RollingFile name="FileAppender" fileName="${BASE_PATH}/logs/${LOG_FILE_NAME}.log"
+                     filePattern="${BASE_PATH}/logs/${LOG_FILE_NAME}/${LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="WARN" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+<!--            Enable the below filter to enable DEBUG logs-->
+<!--            <LevelRangeFilter minLevel="WARN" maxLevel="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>-->
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <logger name="com.turf_booking.bookings_papi" additivity="true" level="info">
+            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="ErrorFileAppender"/>
+        </logger>
+        <Root level="warn">
+            <AppenderRef ref="ConsoleAppender"/>
+        </Root>
+    </Loggers>
+</Configuration>
