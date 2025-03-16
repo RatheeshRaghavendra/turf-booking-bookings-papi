@@ -1,8 +1,8 @@
 # Turf Booking Bookings Papi
 Bookings Process API for the Turf Booking Application
 
-## Architecture
-![Turf booking Architecture v2](https://github.com/user-attachments/assets/1be80a85-d7bf-4f2f-a335-d4eec4e6a6f2)
+## About the Integration
+You can read about it [here](https://github.com/RatheeshRaghavendra/My-Projects/blob/main/Turf-Booking-Service.md)
 
 ## End Points
 
